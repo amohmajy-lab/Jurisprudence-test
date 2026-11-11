@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>اختبار الفقه المشجّر – المستوى الأول</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #111111;
+    --muted: #4b4b4b;
+    --line: #111111;
+    --orange: #fad7a0;
+    --green: #8ee98e;
+    --yellow: #f4f27a;
+    --blue: #7fd8fb;
+    --ok: #1c7a2e;
+    --bad: #b3261e;
+    --ok-bg: #d9f5de;
+    --bad-bg: #fbdcd9;
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17181a;
+      --ink: #f2f2f2;
+      --muted: #b8b8b8;
+      --line: #f2f2f2;
+      --orange: #7a5a2c;
+      --green: #2f6b3a;
+      --yellow: #6d6a1f;
+      --blue: #1f5d77;
+      --ok: #7be08f;
+      --bad: #ff8b82;
+      --ok-bg: #1d3a24;
+      --bad-bg: #482321;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Cairo", Tahoma, "Segoe UI", Arial, sans-serif;
+    line-height: 1.8;
+    padding: 20px 16px 48px;
+  }
+  main { max-width: 680px; margin: 0 auto; }
+  h1 { font-size: 2rem; font-weight: 800; margin: 0 0 4px; }
+  h2 { font-size: 1.25rem; font-weight: 800; margin: 0 0 12px; }
+  p { margin: 0 0 12px; }
+  .box {
+    border: 2px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    background: var(--bg);
+  }
+  .tag {
+    display: inline-block;
+    border: 2px solid var(--line);
+    border-radius: 999px;
+    padding: 0 14px;
+    font-weight: 600;
+    font-size: .95rem;
+    color: var(--ink);
+  }
+  .c-wudu { background: var(--orange); }
+  .c-masah { background: var(--orange); }
+  .c-tayammum { background: var(--green); }
+  .c-hadath { background: var(--green); }
+  .c-salah { background: var(--yellow); }
+
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+  button:focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: 2px;
+  }
+  .btn {
+    border: 2px solid var(--line);
+    background: var(--blue);
+    border-radius: var(--radius);
+    padding: 8px 26px;
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+  .btn.alt { background: var(--bg); }
+
+  /* شاشة البداية */
+  .intro-chapters { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 24px; }
+  .intro-note { color: var(--muted); }
+
+  /* شريط التقدم */
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+  .progress { height: 14px; border: 2px solid var(--line); border-radius: 999px; overflow: hidden; margin-bottom: 20px; }
+  .progress > div { height: 100%; background: var(--green); width: 0; transition: width .25s; }
+
+  /* السؤال */
+  .q-text { font-size: 1.3rem; font-weight: 800; margin: 14px 0 18px; }
+  .opts { display: grid; gap: 10px; padding: 0; margin: 0; list-style: none; }
+  .opt {
+    width: 100%;
+    text-align: right;
+    border: 2px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg);
+    padding: 10px 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .opt:hover:not(:disabled) { background: var(--yellow); }
+  .opt:disabled { cursor: default; }
+  .opt .mark { min-width: 1.4em; font-weight: 800; }
+  .opt.correct { background: var(--ok-bg); border-color: var(--ok); }
+  .opt.wrong { background: var(--bad-bg); border-color: var(--bad); }
+  .opt.correct .mark { color: var(--ok); }
+  .opt.wrong .mark { color: var(--bad); }
+
+  .feedback { margin-top: 18px; padding: 12px 16px; border-radius: var(--radius); border: 2px dashed var(--line); }
+  .feedback strong { display: block; }
+  .next-row { margin-top: 18px; text-align: left; }
+
+  /* النتيجة */
+  .score { font-size: 3rem; font-weight: 800; line-height: 1.2; margin: 0; }
+  .bars { display: grid; gap: 10px; margin: 16px 0 24px; }
+  .bar-row { display: grid; grid-template-columns: 9.5em 1fr 3.2em; gap: 10px; align-items: center; }
+  .bar { height: 16px; border: 2px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .bar > div { height: 100%; }
+  .review { display: grid; gap: 12px; margin: 12px 0 24px; padding: 0; list-style: none; }
+  .review li { border: 2px solid var(--line); border-radius: var(--radius); padding: 10px 14px; }
+  .review .yours { color: var(--bad); }
+  .review .right { color: var(--ok); }
+  .hidden { display: none; }
+  @media (max-width: 480px) {
+    h1 { font-size: 1.6rem; }
+    .bar-row { grid-template-columns: 7.5em 1fr 3em; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .progress > div { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <!-- شاشة البداية -->
+  <section id="screen-start" class="box">
+    <h1>اختبار الفقه المشجّر</h1>
+    <p>المستوى الأول – اختبار اختياري</p>
+    <div class="intro-chapters" aria-label="أبواب الاختبار">
+      <span class="tag c-wudu">الوضوء</span>
+      <span class="tag c-masah">المسح على الخفين</span>
+      <span class="tag c-tayammum">التيمم</span>
+      <span class="tag c-hadath">ما يحرم على المحدث</span>
+      <span class="tag c-salah">الصلاة</span>
+    </div>
+    <p class="intro-note">٢٠ سؤالاً من اختيار متعدد بمستوى متوسط، ويظهر لك الجواب مع التوضيح بعد كل سؤال. لا يشمل الاختبار باب الصوم.</p>
+    <button class="btn" id="btn-start" type="button">ابدأ الاختبار</button>
+  </section>
+
+  <!-- شاشة السؤال -->
+  <section id="screen-quiz" class="hidden" aria-live="polite">
+    <div class="topbar">
+      <span id="q-counter" class="tag"></span>
+      <span id="q-chapter" class="tag"></span>
+    </div>
+    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress"><div></div></div>
+    <div class="box">
+      <p class="q-text" id="q-text"></p>
+      <ul class="opts" id="q-opts"></ul>
+      <div class="feedback hidden" id="q-feedback"></div>
+      <div class="next-row"><button class="btn hidden" id="btn-next" type="button">التالي</button></div>
+    </div>
+  </section>
+
+  <!-- شاشة النتيجة -->
+  <section id="screen-result" class="hidden">
+    <div class="box">
+      <h2>نتيجتك</h2>
+      <p class="score" id="r-score"></p>
+      <p id="r-msg"></p>
+      <h2>حسب الباب</h2>
+      <div class="bars" id="r-bars"></div>
+      <div id="r-review-wrap">
+        <h2>الأسئلة التي تحتاج مراجعة</h2>
+        <ul class="review" id="r-review"></ul>
+      </div>
+      <button class="btn" id="btn-restart" type="button">أعد الاختبار</button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ====== بنك الأسئلة ======
+   كل سؤال: ch = الباب، q = نص السؤال، o = الخيارات (الأول هو الصحيح)، e = التوضيح.
+   لإضافة سؤال جديد: أضف عنصراً جديداً في المصفوفة. الترتيب يُخلط تلقائياً. */
+const CHAPTERS = {
+  wudu:      { name: "الوضوء",              cls: "c-wudu"      },
+  masah:     { name: "المسح على الخفين",    cls: "c-masah"     },
+  tayammum:  { name: "التيمم",              cls: "c-tayammum"  },
+  hadath:    { name: "ما يحرم على المحدث",  cls: "c-hadath"    },
+  salah:     { name: "الصلاة",              cls: "c-salah"     }
+};
+
+const BANK = [
+  // ===== الوضوء =====
+  { ch: "wudu",
+    q: "أيٌّ مما يلي من شروط وجوب الوضوء؟",
+    o: ["وجود الحدث", "النية", "التسمية", "الترتيب بين الأعضاء"],
+    e: "شروط وجوبه: وجود الحدث والقدرة على استعمال الماء. أما التسمية والموالاة والترتيب فمن سننه." },
+  { ch: "wudu",
+    q: "أيٌّ مما يلي من فرائض الوضوء؟",
+    o: ["مسح ربع الرأس", "المضمضة والاستنشاق", "السواك", "تخليل أصابع اليدين"],
+    e: "فرائض الوضوء أربعة: غسل الوجه مرة واحدة، وغسل اليدين مع المرفقين، وغسل القدمين مع الكعبين، ومسح ربع الرأس." },
+  { ch: "wudu",
+    q: "ما المقصود بالموالاة في الوضوء؟",
+    o: ["غسل العضو قبل أن يجف العضو الذي قبله",
+        "غسل كل عضو ثلاث مرات",
+        "البدء باليد والقدم اليمنى قبل اليسرى",
+        "استيعاب الرأس بالمسح"],
+    e: "الموالاة من سنن الوضوء، ومعناها غسل العضو قبل أن يجف العضو الذي قبله مع الترتيب بين الأعضاء." },
+  { ch: "wudu",
+    q: "متى تنقض القهقهة الوضوء؟",
+    o: ["إذا كانت في صلاة ذات ركوع وسجود",
+        "في أي وقت وفي أي مكان",
+        "إذا كانت خارج الصلاة فقط",
+        "إذا كانت في صلاة الجنازة"],
+    e: "من نواقض الوضوء القهقهة في صلاة ذات ركوع وسجود." },
+  { ch: "wudu",
+    q: "أيٌّ مما يلي من مكروهات الوضوء؟",
+    o: ["ضرب الوجه بالماء", "الشرب من فضل الوضوء", "استقبال القبلة", "الدعاء المأثور"],
+    e: "مكروهات الوضوء: الإسراف في الماء، وضرب الوجه بالماء، والانشغال بالكلام. أما البقية فمن آدابه." },
+
+  // ===== المسح على الخفين =====
+  { ch: "masah",
+    q: "أيٌّ مما يلي ليس من شروط المسح على الخفين؟",
+    o: ["أن يكونا من الجلد الطبيعي فقط", "لبسهما بعد طهارة كاملة", "أن يكونا ساترين للكعبين", "أن يمنعا وصول الماء"],
+    e: "شروطه: لبسهما بعد طهارة كاملة، وأن يمكن المشي عليهما، وأن يمنعا وصول الماء، وأن يسترا الكعبين." },
+  { ch: "masah",
+    q: "كم مدة المسح على الخفين للمسافر؟",
+    o: ["ثلاثة أيام بلياليها", "يوم وليلة", "يومان وليلتان", "خمسة أيام"],
+    e: "للمقيم يوم وليلة، وللمسافر ثلاثة أيام بلياليها." },
+  { ch: "masah",
+    q: "من أي وقت تبدأ مدة المسح على الخفين؟",
+    o: ["من حين حصول أول حدث بعد لبس الخفين",
+        "من لحظة لبس الخفين",
+        "من أول صلاة بعد لبسهما",
+        "من طلوع الفجر"],
+    e: "تبدأ المدة من حين حصول أول حدث بعد لبس الخفين، وليس من وقت اللبس." },
+
+  // ===== التيمم =====
+  { ch: "tayammum",
+    q: "بكم ضربة يكون التيمم؟",
+    o: ["ضربتين", "ضربة واحدة", "ثلاث ضربات", "أربع ضربات"],
+    e: "من شروط صحة التيمم أن يكون بضربتين." },
+  { ch: "tayammum",
+    q: "أيٌّ مما يلي من فرائض التيمم؟",
+    o: ["مسح اليدين مع المرفقين", "مسح الرأس", "التسمية", "تقديم اليد اليمنى على اليسرى"],
+    e: "فرائض التيمم: مسح الوجه ومسح اليدين مع المرفقين. أما التسمية والموالاة وتقديم اليمنى فمن سننه." },
+  { ch: "tayammum",
+    q: "أيٌّ مما يلي يبطل التيمم؟",
+    o: ["زوال العذر", "أداء صلاة به", "تقديم اليد اليمنى", "التسمية"],
+    e: "مبطلات التيمم: رؤية الماء، وزوال العذر، وكل ما يبطل الوضوء." },
+
+  // ===== ما يحرم على المحدث =====
+  { ch: "hadath",
+    q: "أيٌّ مما يلي لا يحرم على المحدث حدثاً أصغر؟",
+    o: ["الأكل والشرب", "مسّ المصحف بدون حائل", "الصلاة", "الطواف"],
+    e: "يحرم على المحدث حدثاً أصغر: الصلاة، والطواف، ومسّ المصحف وحمله بدون حائل." },
+
+  // ===== الصلاة =====
+  { ch: "salah",
+    q: "أيٌّ مما يلي ليس من شروط صحة الصلاة؟",
+    o: ["الطمأنينة", "استقبال القبلة", "العلم بدخول الوقت", "ستر العورة بلباس طاهر"],
+    e: "الطمأنينة من واجبات الصلاة وليست من شروط صحتها." },
+  { ch: "salah",
+    q: "السنة الراتبة التي عددها أربع ركعات هي:",
+    o: ["أربع ركعات قبل الظهر", "ركعتان بعد الظهر", "ركعتان بعد المغرب", "ركعتان قبل الفجر"],
+    e: "السنن الرواتب: ركعتان قبل الفجر، وأربع قبل الظهر، وركعتان بعد الظهر، وركعتان بعد المغرب، وركعتان بعد العشاء." },
+  { ch: "salah",
+    q: "أيٌّ مما يلي ركن من أركان الصلاة؟",
+    o: ["الجلوس الأخير مقدار التشهد", "القعود الأول", "قراءة سورة قصيرة مع الفاتحة", "الطمأنينة"],
+    e: "أركانها: القيام مع القدرة، والقراءة، والركوع، والسجود، والجلوس الأخير مقدار التشهد." },
+  { ch: "salah",
+    q: "أيٌّ مما يلي من واجبات الصلاة؟",
+    o: ["قنوت الوتر", "دعاء الاستفتاح", "رفع اليدين عند تكبيرة الإحرام", "التأمين سراً"],
+    e: "قنوت الوتر من الواجبات، أما دعاء الاستفتاح ورفع اليدين والتأمين فمن السنن." },
+  { ch: "salah",
+    q: "ما كيفية سجود السهو؟",
+    o: ["بعد التشهد في القعود الأخير يسلّم تسليمة واحدة عن اليمين، ثم يسجد سجدتين، ثم يعود فيتشهد ويصلي على النبي ﷺ ثم يسلّم",
+        "يسجد سجدتين قبل قراءة التشهد، ثم يتشهد ويسلّم تسليمتين",
+        "يسلّم تسليمتين ثم يسجد سجدتين دون أن يعود إلى التشهد",
+        "يسجد سجدة واحدة بعد السلام ثم ينصرف"],
+    e: "هذه هي الكيفية المذكورة في الباب، ويجب سجود السهو على من ترك واجباً سهواً، أو أخّر ركناً عن محله، أو قدّم واجباً أو أخّره." },
+  { ch: "salah",
+    q: "أيٌّ مما يلي من سنن الصلاة؟",
+    o: ["التسبيح ثلاثاً", "قراءة الفاتحة", "ضم الأنف إلى الجبهة في السجود", "الطمأنينة"],
+    e: "التسبيح ثلاثاً من السنن، أما البقية فمن واجبات الصلاة." },
+  { ch: "salah",
+    q: "أيٌّ مما يلي يفسد الصلاة؟",
+    o: ["الكلام ولو سهواً", "ترك سنن الصلاة", "مدافعة الأخبثين", "تكرار السورة في ركعة واحدة"],
+    e: "الكلام ولو سهواً من مفسدات الصلاة، أما الثلاثة الأخرى فمن مكروهاتها." },
+  { ch: "salah",
+    q: "أيٌّ مما يلي ليس من شروط الإمامة؟",
+    o: ["الغنى", "الذكورة", "العقل", "القراءة"],
+    e: "شروط الإمامة: الإسلام، والبلوغ، والعقل، والذكورة، والقراءة." }
+];
+
+/* ====== المنطق ====== */
+const $ = id => document.getElementById(id);
+const shuffle = arr => {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+const show = name => {
+  ["start", "quiz", "result"].forEach(s => $("screen-" + s).classList.toggle("hidden", s !== name));
+  window.scrollTo(0, 0);
+};
+
+let questions = [], index = 0, results = [];
+
+function start() {
+  questions = shuffle(BANK).map(item => ({
+    ch: item.ch,
+    q: item.q,
+    e: item.e,
+    correct: item.o[0],
+    options: shuffle(item.o)
+  }));
+  index = 0;
+  results = [];
+  show("quiz");
+  render();
+}
+
+function render() {
+  const item = questions[index];
+  const total = questions.length;
+  $("q-counter").textContent = "السؤال " + (index + 1) + " من " + total;
+  const chTag = $("q-chapter");
+  chTag.textContent = CHAPTERS[item.ch].name;
+  chTag.className = "tag " + CHAPTERS[item.ch].cls;
+  const pct = Math.round((index / total) * 100);
+  $("progress").setAttribute("aria-valuenow", pct);
+  $("progress").firstElementChild.style.width = pct + "%";
+
+  $("q-text").textContent = item.q;
+  const list = $("q-opts");
+  list.textContent = "";
+  item.options.forEach(text => {
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "opt";
+    const mark = document.createElement("span");
+    mark.className = "mark";
+    mark.setAttribute("aria-hidden", "true");
+    const label = document.createElement("span");
+    label.textContent = text;
+    btn.append(mark, label);
+    btn.addEventListener("click", () => answer(btn, text));
+    li.appendChild(btn);
+    list.appendChild(li);
+  });
+  $("q-feedback").classList.add("hidden");
+  $("btn-next").classList.add("hidden");
+}
+
+function answer(clicked, text) {
+  const item = questions[index];
+  const ok = text === item.correct;
+  results.push({ ch: item.ch, q: item.q, ok, chosen: text, correct: item.correct });
+
+  document.querySelectorAll("#q-opts .opt").forEach(btn => {
+    btn.disabled = true;
+    const t = btn.querySelector("span:last-child").textContent;
+    if (t === item.correct) {
+      btn.classList.add("correct");
+      btn.querySelector(".mark").textContent = "✓";
+    } else if (btn === clicked) {
+      btn.classList.add("wrong");
+      btn.querySelector(".mark").textContent = "✗";
+    }
+  });
+
+  const fb = $("q-feedback");
+  fb.textContent = "";
+  const head = document.createElement("strong");
+  head.textContent = ok ? "إجابة صحيحة" : "إجابة غير صحيحة";
+  const body = document.createElement("span");
+  body.textContent = item.e;
+  fb.append(head, body);
+  fb.classList.remove("hidden");
+
+  const next = $("btn-next");
+  next.textContent = index === questions.length - 1 ? "عرض النتيجة" : "التالي";
+  next.classList.remove("hidden");
+  next.focus();
+}
+
+function next() {
+  if (index < questions.length - 1) {
+    index++;
+    render();
+  } else {
+    finish();
+  }
+}
+
+function finish() {
+  const total = results.length;
+  const score = results.filter(r => r.ok).length;
+  $("r-score").textContent = score + " / " + total;
+  let msg;
+  if (score >= 18) msg = "ممتاز، إتقان واضح للأبواب.";
+  else if (score >= 14) msg = "جيد جداً، راجع الأسئلة التي أخطأت فيها.";
+  else if (score >= 10) msg = "جيد، يحتاج بعض الأبواب إلى مراجعة.";
+  else msg = "تحتاج إلى مراجعة الأبواب مرة أخرى ثم أعد الاختبار.";
+  $("r-msg").textContent = msg;
+
+  const bars = $("r-bars");
+  bars.textContent = "";
+  Object.keys(CHAPTERS).forEach(key => {
+    const subset = results.filter(r => r.ch === key);
+    if (!subset.length) return;
+    const got = subset.filter(r => r.ok).length;
+    const row = document.createElement("div");
+    row.className = "bar-row";
+    const name = document.createElement("span");
+    name.textContent = CHAPTERS[key].name;
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    const fill = document.createElement("div");
+    fill.className = CHAPTERS[key].cls;
+    fill.style.width = Math.round((got / subset.length) * 100) + "%";
+    bar.appendChild(fill);
+    const num = document.createElement("span");
+    num.textContent = got + "/" + subset.length;
+    row.append(name, bar, num);
+    bars.appendChild(row);
+  });
+
+  const wrong = results.filter(r => !r.ok);
+  $("r-review-wrap").classList.toggle("hidden", wrong.length === 0);
+  const list = $("r-review");
+  list.textContent = "";
+  wrong.forEach(r => {
+    const li = document.createElement("li");
+    const q = document.createElement("strong");
+    q.textContent = r.q;
+    const a = document.createElement("div");
+    a.className = "yours";
+    a.textContent = "إجابتك: " + r.chosen;
+    const b = document.createElement("div");
+    b.className = "right";
+    b.textContent = "الصواب: " + r.correct;
+    li.append(q, a, b);
+    list.appendChild(li);
+  });
+
+  $("progress").firstElementChild.style.width = "100%";
+  show("result");
+}
+
+$("btn-start").addEventListener("click", start);
+$("btn-next").addEventListener("click", next);
+$("btn-restart").addEventListener("click", start);
+</script>
+</body>
+  </html>
